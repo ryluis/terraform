@@ -12,49 +12,7 @@ resource "random_string" "rand_str" {
   special = false
 }
 
-data "aws_availability_zones" "list_of_az" {
-  state = "available"
-}
-
-data "aws_ami" "ubuntu-20_04" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  # filter {
-  #   name   = "image_id"
-  #   values = local.image_id
-  # }
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-
-locals {
-  created_by    = var.created_by
-  generated_via = var.generated_via
-  environment   = var.environment
-  project_name  = var.project_name
-
-  generated_str = random_string.rand_str.result
-  instance_type = var.instance_type
-  image_id      = data.aws_ami.ubuntu-20_04.id
-
-  volume_size                    = var.volume_size
-  volume_type                    = var.volume_type
-  is_encrypted                   = var.is_encrypted
-  is_delete_on_termination       = var.is_delete_on_termination
-  is_associate_public_ip_address = var.is_associate_public_ip_address
-}
-
-resource "aws_vpc" "tableau_vpc" {
+resource "aws_vpc" "xl_vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
@@ -67,12 +25,12 @@ resource "aws_vpc" "tableau_vpc" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  depends_on = [aws_vpc.tableau_vpc]
+  depends_on = [aws_vpc.xl_vpc]
 
   ## subnet will be created acrosss all available AZ
   count = length(data.aws_availability_zones.list_of_az.names)
 
-  vpc_id            = aws_vpc.tableau_vpc.id
+  vpc_id            = aws_vpc.xl_vpc.id
   cidr_block        = cidrsubnet(var.vpc_cidr, "8", count.index + 1)
   availability_zone = data.aws_availability_zones.list_of_az.names[count.index]
 
@@ -87,21 +45,63 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
+resource "tls_private_key" "tls_key" {
+  algorithm = local.key_algorithm
+  rsa_bits  = local.key_bit_size
+}
 
+resource "aws_key_pair" "xl_360_CA_keypair" {
+  key_name   = local.key_name
+  public_key = tls_private_key.tls_key.public_key_openssh
+}
+
+resource "local_file" "xl_360_ca_key" {
+  content  = tls_private_key.tls_key.private_key_pem
+  filename = "${path.module}/${local.keypair_dir}/${local.keypair_file}"
+}
 
 module "app_security_group" {
-  depends_on = [aws_vpc.tableau_vpc]
+  depends_on = [aws_vpc.xl_vpc]
 
-
-
-  source  = "terraform-aws-modules/security-group/aws//modules/ssh"
-  version = "~> 4.0"
+  # source  = "terraform-aws-modules/security-group/aws//modules/ssh"
+  source = "terraform-aws-modules/security-group/aws"
 
   name        = format("sg_ssh-%s-%s-%s", local.environment, local.project_name, local.generated_str)
   description = "Security group for allowing ssh access"
-  vpc_id      = aws_vpc.tableau_vpc.id
+  vpc_id      = aws_vpc.xl_vpc.id
 
   ingress_cidr_blocks = aws_subnet.public_subnet.*.cidr_block
+
+  ## using predefined rule declaration
+  ingress_rules = [
+    local.sg_module_ssh
+  ]
+
+  ingress_with_self = [{
+    rule = "all-all"
+  }]
+
+  ## using custom rule declaration
+  # ingress_with_cidr_blocks = [
+  #   {
+  #     from_port  = 22
+  #     to_port    = 22
+  #     protocol   = "tcp"
+  #     cidr_block = "0.0.0.0/0"
+  #   }
+  # ]
+
+  # egress_rules       = ["all-all"]
+  egress_cidr_blocks = ["0.0.0.0/0"]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port  = 0
+      to_port    = 65535
+      protocol   = "ALL"
+      cidr_block = "0.0.0.0/0"
+    }
+  ]
 
   tags = {
     Name          = format("sg_%s-%s-%s", local.environment, local.project_name, local.generated_str),
@@ -112,36 +112,35 @@ module "app_security_group" {
   }
 }
 
-resource "aws_ec2_instance_state" "dummy-instance" {
-  instance_id = module.ec2_tableau.id
-  state       = "stopped"
-  # state = "running"
-}
-
 module "ec2_tableau" {
   depends_on = [
-    aws_vpc.tableau_vpc,
+    aws_vpc.xl_vpc,
     aws_subnet.public_subnet,
-    module.app_security_group
+    module.app_security_group,
+    aws_key_pair.xl_360_CA_keypair
   ]
-  source = "./modules/aws_instance/tableau"
 
-  az_list            = data.aws_availability_zones.list_of_az.names
-  instance_type      = local.instance_type
-  image_id           = local.image_id
-  subnet_ids         = aws_subnet.public_subnet.*.id
-  security_group_ids = [module.app_security_group.security_group_id]
+  source = "./modules/aws_instance"
+
+  az_list                     = data.aws_availability_zones.list_of_az.names
+  instance_type               = local.instance_type
+  instance_image_id           = local.image_id
+  instance_subnet_ids         = aws_subnet.public_subnet.*.id
+  instance_security_group_ids = [module.app_security_group.security_group_id]
 
   is_associate_public_ip_address = local.is_associate_public_ip_address
 
+  ## key pair configuration
+  instance_key_name = local.key_name
+
   ## root volume configuration
-  volume_size              = local.volume_size
-  volume_type              = local.volume_type
+  instance_volume_size     = local.volume_size
+  instance_volume_type     = local.volume_type
   is_encrypted             = local.is_encrypted
   is_delete_on_termination = local.is_delete_on_termination
 
 
-  tags = {
+  instance_tags = {
     Name          = format("ec2_%s-%s-%s", local.environment, local.project_name, local.generated_str),
     created_by    = local.created_by,
     generated_via = local.generated_via,
@@ -152,8 +151,9 @@ module "ec2_tableau" {
 
 
 
-
-
+# output "path" {
+#   value = path.module
+# }
 
 # output "list_of_ubuntu" {
 #   value = data.aws_ami.ubuntu-20_04
@@ -181,6 +181,3 @@ module "ec2_tableau" {
 #     "project_name" = var.project_name,
 #   }
 # }
-
-
-

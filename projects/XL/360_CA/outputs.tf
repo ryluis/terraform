@@ -1,6 +1,6 @@
 output "vpc" {
   description = "show result of created vpc"
-  value       = aws_vpc.tableau_vpc
+  value       = aws_vpc.xl_vpc
 }
 
 output "public_subnet" {

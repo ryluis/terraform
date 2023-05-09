@@ -22,12 +22,6 @@ variable "aws_profile" {
   default     = ""
 }
 
-variable "instance_name" {
-  type        = string
-  description = "name of the instance"
-  default     = ""
-}
-
 variable "instance_count" {
   type        = number
   description = "number of instances"
@@ -52,15 +46,39 @@ variable "public_subnets" {
   default     = []
 }
 
-variable "is_enable" {
-  type        = bool
-  description = "boolean true value"
-  default     = true
-}
-
 variable "vpc_cidr" {
   type        = string
   description = "cidr of vpc"
+  default     = ""
+}
+
+variable "key_name" {
+  type        = string
+  description = "key pair name value"
+  default     = ""
+}
+
+variable "key_algorithm" {
+  type        = string
+  description = "key algorithm value"
+  default     = ""
+}
+
+variable "key_bit_size" {
+  type        = number
+  description = "keys bit size"
+  default     = 4096
+}
+
+variable "keypair_dir" {
+  type        = string
+  description = "directory for storing keypair file"
+  default     = ""
+}
+
+variable "keypair_file" {
+  type        = string
+  description = "keypair file"
   default     = ""
 }
 
@@ -98,6 +116,12 @@ variable "is_associate_public_ip_address" {
   type        = bool
   description = "associated with public ip address boolean value"
   default     = true
+}
+
+variable "sg_module_ssh" {
+  type        = string
+  description = "ssh security group module"
+  default     = "ssh-tcp"
 }
 
 ## variables for tagging
