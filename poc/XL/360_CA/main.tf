@@ -151,6 +151,21 @@ module "ec2_tableau" {
 
 
 
+#### Getting the list of subnet ids created with for_each
+
+# subnet_ids = [for k, v in aws_subnet.private : aws_subnet.private[k].id]
+
+
+
+
+
+
+
+
+
+
+
+
 # output "path" {
 #   value = path.module
 # }

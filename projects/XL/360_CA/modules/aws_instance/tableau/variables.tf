@@ -4,6 +4,11 @@ variable "az_list" {
   default     = []
 }
 
+variable "instance_count" {
+  description = "number of instance"
+  type        = number
+}
+
 variable "instance_type" {
   description = "Type of EC2 instance to use"
   type        = string
@@ -42,29 +47,60 @@ variable "is_associate_public_ip_address" {
   default     = true
 }
 
-variable "instance_volume_size" {
+variable "root_volume_size" {
   type        = number
   description = "disk volume size value"
   default     = 20
 }
 
-variable "instance_volume_type" {
+variable "root_volume_type" {
   type        = string
   description = "disk volume type value"
   default     = "gp3"
 }
 
-variable "is_encrypted" {
+variable "root_is_encrypted" {
   type        = bool
   description = "disk encrypted boolean value"
   default     = false
 }
 
-variable "is_delete_on_termination" {
+variable "root_is_delete_on_termination" {
   type        = bool
   description = "delete on terminataion boolean value"
   default     = true
 }
+
+variable "ebs1_device_name" {
+  type        = string
+  description = "disk name value"
+  default     = "/dev/xvda"
+}
+
+variable "ebs1_volume_size" {
+  type        = number
+  description = "disk volume size value"
+  default     = 20
+}
+
+variable "ebs1_volume_type" {
+  type        = string
+  description = "disk volume type value"
+  default     = "gp3"
+}
+
+variable "ebs1_is_encrypted" {
+  type        = bool
+  description = "disk encrypted boolean value"
+  default     = false
+}
+
+variable "ebs1_is_delete_on_termination" {
+  type        = bool
+  description = "delete on terminataion boolean value"
+  default     = false
+}
+
 
 variable "instance_key_name" {
   type        = string
@@ -72,4 +108,4 @@ variable "instance_key_name" {
   default     = ""
 }
 
-    
+

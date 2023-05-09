@@ -13,10 +13,10 @@ resource "random_string" "rand_str" {
 }
 
 resource "aws_vpc" "xl_vpc" {
-  cidr_block = var.vpc_cidr
+  cidr_block = local.vpc_cidr
 
   tags = {
-    Name          = format("vpc_%s-%s-%s", local.environment, local.project_name, local.generated_str),
+    Name          = local.vpc_name,
     created_by    = local.created_by,
     generated_via = local.generated_via,
     environment   = local.environment
@@ -30,14 +30,59 @@ resource "aws_subnet" "public_subnet" {
   ## subnet will be created acrosss all available AZ
   count = length(data.aws_availability_zones.list_of_az.names)
 
-  vpc_id            = aws_vpc.xl_vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, "8", count.index + 1)
+  vpc_id     = aws_vpc.xl_vpc.id
+  cidr_block = local.public_subnets[count.index]
+
   availability_zone = data.aws_availability_zones.list_of_az.names[count.index]
 
   tags = {
     ## ap-southeast-3a, ap-southeast-3b, ap-southeast-3c
 
-    Name          = format("public_subnet_%s-%s-%s-%s", substr(data.aws_availability_zones.list_of_az.names[count.index], 13, 2), local.environment, local.project_name, local.generated_str),
+    Name          = format("%s-%s-public-Subnet-%s", local.project_name, local.environment, data.aws_availability_zones.list_of_az.names[count.index]),
+    created_by    = local.created_by,
+    generated_via = local.generated_via,
+    environment   = local.environment,
+    project_name  = local.project_name
+  }
+}
+
+resource "aws_subnet" "private_subnet" {
+  depends_on = [aws_vpc.xl_vpc]
+
+  ## subnet will be created acrosss all available AZ
+  count = length(data.aws_availability_zones.list_of_az.names)
+
+  vpc_id     = aws_vpc.xl_vpc.id
+  cidr_block = local.private_subnets[count.index]
+
+  availability_zone = data.aws_availability_zones.list_of_az.names[count.index]
+
+  tags = {
+    ## ap-southeast-3a, ap-southeast-3b, ap-southeast-3c
+
+    Name          = format("%s-%s-private-Subnet-%s", local.project_name, local.environment, data.aws_availability_zones.list_of_az.names[count.index]),
+    created_by    = local.created_by,
+    generated_via = local.generated_via,
+    environment   = local.environment,
+    project_name  = local.project_name
+  }
+}
+
+resource "aws_subnet" "protected_subnet" {
+  depends_on = [aws_vpc.xl_vpc]
+
+  ## subnet will be created acrosss all available AZ
+  count = length(data.aws_availability_zones.list_of_az.names)
+
+  vpc_id     = aws_vpc.xl_vpc.id
+  cidr_block = local.protected_subnets[count.index]
+
+  availability_zone = data.aws_availability_zones.list_of_az.names[count.index]
+
+  tags = {
+    ## ap-southeast-3a, ap-southeast-3b, ap-southeast-3c
+
+    Name          = format("%s-%s-protected-Subnet-%s", local.project_name, local.environment, data.aws_availability_zones.list_of_az.names[count.index]),
     created_by    = local.created_by,
     generated_via = local.generated_via,
     environment   = local.environment,
@@ -120,12 +165,15 @@ module "ec2_tableau" {
     aws_key_pair.xl_360_CA_keypair
   ]
 
-  source = "./modules/aws_instance"
+  source = "./modules/aws_instance/tableau"
 
-  az_list                     = data.aws_availability_zones.list_of_az.names
-  instance_type               = local.instance_type
-  instance_image_id           = local.image_id
-  instance_subnet_ids         = aws_subnet.public_subnet.*.id
+  # instance_count    = local.tableau_instance_count
+  az_list = data.aws_availability_zones.list_of_az.names[0]
+
+  instance_type     = local.tableau_instance_type
+  instance_image_id = local.tableau_image_id
+  # instance_subnet_ids         = aws_subnet.public_subnet.*.id
+  instance_subnet_ids         = aws_subnet.private_subnet[0].id
   instance_security_group_ids = [module.app_security_group.security_group_id]
 
   is_associate_public_ip_address = local.is_associate_public_ip_address
@@ -141,11 +189,12 @@ module "ec2_tableau" {
 
 
   instance_tags = {
-    Name          = format("ec2_%s-%s-%s", local.environment, local.project_name, local.generated_str),
+    Name          = format("%s-%s-Tableau-%s-ec2", local.project_name, local.environment, local.generated_str),
     created_by    = local.created_by,
     generated_via = local.generated_via,
     environment   = local.environment,
     project_name  = local.project_name
+    map-migrated  = local.map-migrated
   }
 }
 
@@ -157,27 +206,4 @@ module "ec2_tableau" {
 
 # output "list_of_ubuntu" {
 #   value = data.aws_ami.ubuntu-20_04
-# }
-
-## vpc module can be used to define public subnet & private subnet explicitly
-
-# module "vpc" {
-#   source  = "terraform-aws-modules/vpc/aws"
-#   version = "3.19.0"
-
-#   azs  = data.aws_availability_zones.list_of_az.names
-#   cidr = var.vpc_cidr
-
-#   public_subnets = var.public_subnets
-#   public_subnets  = var.public_subnets
-
-#   # enable_nat_gateway = var.is_enable
-
-#   tags = {
-#     "Name"         = format("vpc-%s-%s-%s", "${random_string.rand_str.result}", var.environment, var.project_name),
-#     "created_by"   = var.created_by,
-#     "created_via"  = var.created_via,
-#     "environment"  = var.environment,
-#     "project_name" = var.project_name,
-#   }
 # }

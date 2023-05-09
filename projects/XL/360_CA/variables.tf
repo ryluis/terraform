@@ -22,18 +22,35 @@ variable "aws_profile" {
   default     = ""
 }
 
-variable "instance_count" {
+variable "tableau_instance_count" {
   type        = number
   description = "number of instances"
   default     = 1
 }
 
-variable "instance_type" {
+variable "tableau_instance_type" {
   type        = string
   description = "type of instances"
   default     = "t3.micro"
 }
 
+variable "collibra_instance_count" {
+  type        = number
+  description = "number of instances"
+  default     = 1
+}
+
+variable "collibra_instance_type" {
+  type        = string
+  description = "type of instances"
+  default     = "t3.micro"
+}
+
+variable "protected_subnets" {
+  type        = list(string)
+  description = "list of protected subnets"
+  default     = []
+}
 variable "private_subnets" {
   type        = list(string)
   description = "list of private subnets"
@@ -49,6 +66,12 @@ variable "public_subnets" {
 variable "vpc_cidr" {
   type        = string
   description = "cidr of vpc"
+  default     = ""
+}
+
+variable "vpc_name" {
+  type        = string
+  description = "name of vpc"
   default     = ""
 }
 
@@ -88,28 +111,58 @@ variable "image_id" {
   default     = []
 }
 
-variable "volume_size" {
+variable "root_volume_size" {
   type        = number
   description = "disk volume size value"
   default     = 20
 }
 
-variable "volume_type" {
+variable "root_volume_type" {
   type        = string
   description = "disk volume type value"
   default     = "gp3"
 }
 
-variable "is_encrypted" {
+variable "root_is_encrypted" {
   type        = bool
   description = "disk encrypted boolean value"
   default     = false
 }
 
-variable "is_delete_on_termination" {
+variable "root_is_delete_on_termination" {
   type        = bool
   description = "delete on terminataion boolean value"
   default     = true
+}
+
+variable "ebs1_device_name" {
+  type        = string
+  description = "disk name value"
+  default     = "/dev/xvda"
+}
+
+variable "ebs1_volume_size" {
+  type        = number
+  description = "disk volume size value"
+  default     = 20
+}
+
+variable "ebs1_volume_type" {
+  type        = string
+  description = "disk volume type value"
+  default     = "gp3"
+}
+
+variable "ebs1_is_encrypted" {
+  type        = bool
+  description = "disk encrypted boolean value"
+  default     = false
+}
+
+variable "ebs1_is_delete_on_termination" {
+  type        = bool
+  description = "delete on terminataion boolean value"
+  default     = false
 }
 
 variable "is_associate_public_ip_address" {
@@ -142,6 +195,10 @@ variable "project_name" {
 }
 
 variable "environment" {
+  type    = string
+  default = ""
+}
+variable "map-migrated" {
   type    = string
   default = ""
 }
