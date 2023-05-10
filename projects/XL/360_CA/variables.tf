@@ -22,6 +22,12 @@ variable "aws_profile" {
   default     = ""
 }
 
+variable "vpc_id" {
+  type        = list(string)
+  description = "list of vpc id value"
+  default     = []
+}
+
 variable "tableau_instance_count" {
   type        = number
   description = "number of instances"
@@ -50,35 +56,6 @@ variable "collibra_instance_type" {
   type        = string
   description = "type of instances"
   default     = "t3.micro"
-}
-
-variable "protected_subnets" {
-  type        = list(string)
-  description = "list of protected subnets"
-  default     = []
-}
-variable "private_subnets" {
-  type        = list(string)
-  description = "list of private subnets"
-  default     = []
-}
-
-variable "public_subnets" {
-  type        = list(string)
-  description = "list of public subnets"
-  default     = []
-}
-
-variable "vpc_cidr" {
-  type        = string
-  description = "cidr of vpc"
-  default     = ""
-}
-
-variable "vpc_name" {
-  type        = string
-  description = "name of vpc"
-  default     = ""
 }
 
 variable "key_name" {

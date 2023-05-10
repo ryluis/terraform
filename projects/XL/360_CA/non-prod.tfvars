@@ -8,26 +8,9 @@ aws_shared_config_files      = ["/home/arry/.aws/config"]
 # AWS environment configuration
 
 ## VPC configuration
-vpc_name = "edm360ca-nonprod"
-vpc_cidr = "10.43.252.0/22"
+vpc_id = ["vpc-0e480bbc417a4e062"]
 
-public_subnets = [
-  "10.43.255.0/27",
-  "10.43.255.32/27",
-  "10.43.255.64/27"
-]
 
-private_subnets = [
-  "10.43.252.0/24",
-  "10.43.253.0/24",
-  "10.43.254.0/24"
-]
-
-protected_subnets = [
-  "10.43.255.96/27",
-  "10.43.255.128/27",
-  "10.43.255.160/27"
-]
 
 instance_user_data = data.template_file.tableau_init.rendered
 

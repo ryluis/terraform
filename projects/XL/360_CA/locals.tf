@@ -2,11 +2,7 @@ locals {
   generated_str = random_string.rand_str.result
 
   ## vpc variable declaration
-  vpc_name          = var.vpc_name
-  vpc_cidr          = var.vpc_cidr
-  public_subnets    = var.public_subnets
-  private_subnets   = var.private_subnets
-  protected_subnets = var.protected_subnets
+  vpc_id = var.vpc_id
 
   ## aws instance variable declaration
   tableau_instance_count         = var.tableau_instance_count
