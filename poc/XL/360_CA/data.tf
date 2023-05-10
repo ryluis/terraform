@@ -21,3 +21,8 @@ data "aws_ami" "ubuntu-20_04" {
     values = ["hvm"]
   }
 }
+
+data "template_file" "tableau_init" {
+  template = file("${path.module}/templates/tableau-init.sh")
+
+}

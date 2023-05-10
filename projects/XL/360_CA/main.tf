@@ -237,7 +237,11 @@ resource "local_file" "xl_360_ca_key" {
 }
 
 module "sg_01" {
-  depends_on = [aws_vpc.xl_vpc]
+  depends_on = [
+    aws_vpc.xl_vpc,
+    aws_subnet.public_subnet,
+    aws_subnet.private_subnet
+  ]
 
   # source  = "terraform-aws-modules/security-group/aws//modules/ssh"
   source = "terraform-aws-modules/security-group/aws"
@@ -246,7 +250,7 @@ module "sg_01" {
   description = "Security group for allowing ssh access from private subnet"
   vpc_id      = aws_vpc.xl_vpc.id
 
-  ingress_cidr_blocks = aws_subnet.private_subnet.*.cidr_block
+  ingress_cidr_blocks = concat(aws_subnet.private_subnet.*.cidr_block, aws_subnet.public_subnet.*.cidr_block)
 
   ## using predefined rule declaration
   ingress_rules = [
@@ -288,7 +292,7 @@ module "sg_02" {
   description = "Security group for allowing ssh access from internet"
   vpc_id      = aws_vpc.xl_vpc.id
 
-  ingress_cidr_blocks = "0.0.0.0/0"
+  ingress_cidr_blocks = ["0.0.0.0/0"]
 
   ## using predefined rule declaration
   ingress_rules = [
@@ -328,7 +332,7 @@ module "ec2_bastion" {
     aws_key_pair.xl_360_CA_keypair
   ]
 
-  source = "./modules/aws_instance/tableau"
+  source = "./modules/aws_instance"
 
   az_list = [data.aws_availability_zones.list_of_az.names[0]]
 
@@ -349,7 +353,7 @@ module "ec2_bastion" {
   root_is_delete_on_termination = true
 
   instance_tags = {
-    Name          = format("%s-%s-Tableau-%s-ec2", local.project_name, local.environment, local.generated_str),
+    Name          = format("%s-%s-Bastion-%s-ec2", local.project_name, local.environment, local.generated_str),
     created_by    = local.created_by,
     generated_via = local.generated_via,
     environment   = local.environment,
@@ -366,7 +370,7 @@ module "ec2_tableau" {
     aws_key_pair.xl_360_CA_keypair
   ]
 
-  source = "./modules/aws_instance/tableau"
+  source = "./modules/aws_instance"
 
   # instance_count    = local.tableau_instance_count
   # az_list = data.aws_availability_zones.list_of_az.names

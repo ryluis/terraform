@@ -1,15 +1,21 @@
 locals {
-  ## tagging variable declaration
-  created_by    = var.created_by
-  generated_via = var.generated_via
-  environment   = var.environment
-  project_name  = var.project_name
+  generated_str = random_string.rand_str.result
+
+  ## vpc variable declaration
+  vpc_name          = var.vpc_name
+  vpc_cidr          = var.vpc_cidr
+  public_subnets    = var.public_subnets
+  private_subnets   = var.private_subnets
+  protected_subnets = var.protected_subnets
 
   ## aws instance variable declaration
-  generated_str                  = random_string.rand_str.result
-  instance_type                  = var.instance_type
-  image_id                       = data.aws_ami.ubuntu-20_04.id
+  tableau_instance_count         = var.tableau_instance_count
+  tableau_instance_type          = var.tableau_instance_type
+  tableau_image_id               = data.aws_ami.ubuntu-20_04.id
   is_associate_public_ip_address = var.is_associate_public_ip_address
+  tableau_instance_user_data     = data.template_file.tableau_init.rendered
+
+  bastion_image_id = data.aws_ami.ubuntu-20_04.id
 
   ## keypair variable declaration
   key_name      = var.key_name
@@ -19,12 +25,26 @@ locals {
   key_bit_size  = var.key_bit_size
 
   ## storage variable declaration
-  volume_size              = var.volume_size
-  volume_type              = var.volume_type
-  is_encrypted             = var.is_encrypted
-  is_delete_on_termination = var.is_delete_on_termination
+  root_volume_size              = var.root_volume_size
+  root_volume_type              = var.root_volume_type
+  root_is_encrypted             = var.root_is_encrypted
+  root_is_delete_on_termination = var.root_is_delete_on_termination
+
+  ebs1_device_name              = var.ebs1_device_name
+  ebs1_volume_size              = var.ebs1_volume_size
+  ebs1_volume_type              = var.ebs1_volume_type
+  ebs1_is_encrypted             = var.ebs1_is_encrypted
+  ebs1_is_delete_on_termination = var.ebs1_is_delete_on_termination
+
+
 
   ## security group module variable declaration
   sg_module_ssh = var.sg_module_ssh
 
+  ## tagging variable declaration
+  created_by    = var.created_by
+  generated_via = var.generated_via
+  environment   = var.environment
+  project_name  = var.project_name
+  map-migrated  = var.map-migrated
 }
