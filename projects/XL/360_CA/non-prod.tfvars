@@ -29,29 +29,30 @@ protected_subnets = [
   "10.43.255.160/27"
 ]
 
+instance_user_data = data.template_file.tableau_init.rendered
 
 tableau_instance_count = 1
-tableau_instance_type  = "m5.4xlarge"
-# tableau_instance_type = "t3.micro"
+# tableau_instance_type  = "m5.4xlarge"
+tableau_instance_type = "t3.micro"
 
 
-collibra_intance_count = 1
-collibra_instance_type = "m5.4xlarge"
+# collibra_intance_count = 1
+# collibra_instance_type = "m5.4xlarge"
 
 
-is_associate_public_ip_address = false
+is_associate_public_ip_address = true
 
 
 ## root volume configuration
 # volume_size              = 1000
-root_volume_size              = 20
+root_volume_size              = 50
 root_volume_type              = "gp3"
 root_is_encrypted             = false
 root_is_delete_on_termination = true
 
 # ebs volume configuration
 ebs1_device_name              = "/dev/xvda"
-ebs1_volume_size              = "50"
+ebs1_volume_size              = 1000
 ebs1_volume_type              = "gp3"
 ebs1_is_encrypted             = true
 ebs1_is_delete_on_termination = false

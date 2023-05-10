@@ -1,5 +1,6 @@
 resource "aws_instance" "server" {
-  # count                       = var.instance_count
+  # count = var.instance_count
+
   count                       = length(var.az_list)
   ami                         = var.instance_image_id
   instance_type               = var.instance_type
@@ -9,8 +10,6 @@ resource "aws_instance" "server" {
 
   ## key pair
   key_name = var.instance_key_name
-
-
 
   # root disk
   root_block_device {
@@ -29,13 +28,7 @@ resource "aws_instance" "server" {
     delete_on_termination = var.ebs1_is_delete_on_termination
   }
 
-  user_data = <<-EOF
-    #!/bin/bash
-    sudo apt update -y
-    sudo apt upgrade -y
-    sudo apt install -y net-tools network-manager
-    
-    EOF
+  user_data = var.instance_user_data
 
   tags = var.instance_tags
 }

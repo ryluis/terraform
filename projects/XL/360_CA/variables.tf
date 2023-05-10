@@ -34,6 +34,12 @@ variable "tableau_instance_type" {
   default     = "t3.micro"
 }
 
+variable "tableau_user_data" {
+  type        = string
+  description = "user data"
+  default     = ""
+}
+
 variable "collibra_instance_count" {
   type        = number
   description = "number of instances"
@@ -178,7 +184,6 @@ variable "sg_module_ssh" {
 }
 
 ## variables for tagging
-
 variable "created_by" {
   type    = string
   default = ""

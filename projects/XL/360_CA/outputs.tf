@@ -8,7 +8,7 @@ output "public_subnet" {
   value       = aws_subnet.public_subnet
 }
 
-output "security_group" {
-  description = "show result of created security group"
-  value       = module.app_security_group
-}
+# output "security_group" {
+#   description = "show result of created security group"
+#   value       = module.app_security_group
+# }
