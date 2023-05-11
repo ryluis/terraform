@@ -11,7 +11,7 @@ locals {
   is_associate_public_ip_address = var.is_associate_public_ip_address
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
 
-  bastion_image_id = data.aws_ami.ubuntu-20_04.id
+  bastion_image_id               = data.aws_ami.ubuntu-20_04.id
 
   ## keypair variable declaration
   key_name      = var.key_name
