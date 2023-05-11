@@ -1,7 +1,5 @@
 resource "aws_instance" "server" {
-  # count = var.instance_count
-
-  count                       = length(var.az_list)
+  count                       = var.instance_count
   ami                         = var.instance_image_id
   instance_type               = var.instance_type
   subnet_id                   = var.instance_subnet_ids[count.index]

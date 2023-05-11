@@ -22,18 +22,52 @@ data "template_file" "tableau_init" {
 
 }
 
-data "aws_subnets" "list_of_subnet" {
+data "aws_key_pair" "existing_key_pair" {
+  key_name           = var.key_name
+  include_public_key = true
+}
+
+data "aws_subnets" "public_subnet" {
   filter {
     name   = "vpc-id"
-    values = local.vpc_id
+    values = [local.vpc_id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["edm360ca-nonprod-public*"]
   }
 }
 
-data "aws_subnet" "subnet" {
-  for_each = toset(data.aws_subnets.list_of_subnet.ids)
+data "aws_subnets" "private_subnet" {
+  filter {
+    name   = "vpc-id"
+    values = [local.vpc_id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["edm360ca-nonprod-private*"]
+  }
+}
+
+data "aws_subnet" "list_of_public_subnet" {
+  for_each = toset(data.aws_subnets.public_subnet.ids)
   id       = each.value
 }
 
-output "subnet_cidr_blocks" {
-  value = [for s in data.aws_subnet.subnet : s.cidr_block]
+data "aws_subnet" "list_of_private_subnet" {
+  for_each = toset(data.aws_subnets.private_subnet.ids)
+  id       = each.value
+}
+
+data "aws_instances" "existing_tableau_instances" {
+
+  filter {
+    name   = "tag:Name"
+    values = ["*Tableau*"]
+  }
+
+  instance_state_names = ["running", "stopped"]
+
 }

@@ -8,15 +8,19 @@ aws_shared_config_files      = ["/home/arry/.aws/config"]
 # AWS environment configuration
 
 ## VPC configuration
-vpc_id = ["vpc-0e480bbc417a4e062"]
+## LTI
+# vpc_id = "vpc-04840b2bd106d70b4"
+
+## XL
+vpc_id = "vpc-09a25a3c8b6353b7b"
 
 
 
 instance_user_data = data.template_file.tableau_init.rendered
 
 tableau_instance_count = 1
-# tableau_instance_type  = "m5.4xlarge"
-tableau_instance_type = "t3.micro"
+tableau_instance_type  = "m5.4xlarge"
+# tableau_instance_type = "t3.micro"
 
 
 # collibra_intance_count = 1
@@ -27,7 +31,6 @@ is_associate_public_ip_address = true
 
 
 ## root volume configuration
-# volume_size              = 1000
 root_volume_size              = 50
 root_volume_type              = "gp3"
 root_is_encrypted             = false

@@ -4,10 +4,10 @@ variable "az_list" {
   default     = []
 }
 
-# variable "instance_count" {
-#   description = "number of instance"
-#   type        = number
-# }
+variable "instance_count" {
+  description = "number of instance"
+  type        = number
+}
 
 variable "instance_type" {
   description = "Type of EC2 instance to use"

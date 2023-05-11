@@ -23,9 +23,9 @@ variable "aws_profile" {
 }
 
 variable "vpc_id" {
-  type        = list(string)
+  type        = string
   description = "list of vpc id value"
-  default     = []
+  default     = ""
 }
 
 variable "tableau_instance_count" {

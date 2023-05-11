@@ -4,6 +4,16 @@ locals {
   ## vpc variable declaration
   vpc_id = var.vpc_id
 
+  public_subnets_cidr  = sort([for subnet in data.aws_subnet.list_of_public_subnet : subnet.cidr_block])
+  private_subnets_cidr = sort([for subnet in data.aws_subnet.list_of_private_subnet : subnet.cidr_block])
+
+  public_subnets_info  = { for k, v in data.aws_subnet.list_of_public_subnet : v.cidr_block => k }
+  private_subnets_info = { for k, v in data.aws_subnet.list_of_private_subnet : v.cidr_block => k }
+
+
+
+
+
   ## aws instance variable declaration
   tableau_instance_count         = var.tableau_instance_count
   tableau_instance_type          = var.tableau_instance_type
@@ -11,7 +21,9 @@ locals {
   is_associate_public_ip_address = var.is_associate_public_ip_address
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
 
-  bastion_image_id               = data.aws_ami.ubuntu-20_04.id
+  list_of_existing_tableau_instance = data.aws_instances.existing_tableau_instances
+
+  bastion_image_id = data.aws_ami.ubuntu-20_04.id
 
   ## keypair variable declaration
   key_name      = var.key_name
