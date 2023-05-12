@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo yum update -y
 
 ## configure 1st partition for /var
 sudo bash -c "mkfs.xfs /dev/nvme2n1"
