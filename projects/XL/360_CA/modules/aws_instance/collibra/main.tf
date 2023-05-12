@@ -32,6 +32,7 @@ resource "aws_instance" "server" {
     volume_type           = var.ebs2_volume_type
     encrypted             = var.ebs2_is_encrypted
     delete_on_termination = var.ebs2_is_delete_on_termination
+
   }
 
   user_data = var.instance_user_data

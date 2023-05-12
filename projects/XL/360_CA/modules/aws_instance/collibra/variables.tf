@@ -137,6 +137,36 @@ variable "ebs2_is_delete_on_termination" {
   default     = false
 }
 
+variable "ebs3_device_name" {
+  type        = string
+  description = "disk name value"
+  default     = "/dev/xvda"
+}
+
+variable "ebs3_volume_size" {
+  type        = number
+  description = "disk volume size value"
+  default     = 30
+}
+
+variable "ebs3_volume_type" {
+  type        = string
+  description = "disk volume type value"
+  default     = "gp3"
+}
+
+variable "ebs3_is_encrypted" {
+  type        = bool
+  description = "disk encrypted boolean value"
+  default     = false
+}
+
+variable "ebs3_is_delete_on_termination" {
+  type        = bool
+  description = "delete on terminataion boolean value"
+  default     = false
+}
+
 variable "instance_key_name" {
   type        = string
   description = "instance key pair name value"
