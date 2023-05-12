@@ -23,7 +23,7 @@ data "aws_ami" "rhel-8" {
 
   filter {
     name   = "name"
-    values = ["RHEL-8.2*HVM-*Hourly*"]
+    values = ["RHEL-8.1*HVM-*Hourly*"]
   }
 
   filter {
