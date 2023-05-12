@@ -17,8 +17,34 @@ data "aws_ami" "ubuntu-20_04" {
   }
 }
 
+data "aws_ami" "rhel-8" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["RHEL-8.2*HVM-*Hourly*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+}
+
+
 data "template_file" "tableau_init" {
   template = file("${path.module}/templates/tableau-init.sh")
+
+}
+
+data "template_file" "collibra_init" {
+  template = file("${path.module}/templates/collibra-init.sh")
 
 }
 

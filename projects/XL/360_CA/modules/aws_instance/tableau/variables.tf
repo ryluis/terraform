@@ -35,6 +35,12 @@ variable "instance_tags" {
   default     = {}
 }
 
+variable "ebs_volume_count" {
+  type        = number
+  description = "number of ebs volume"
+  default     = 1
+}
+
 variable "is_enable" {
   type        = bool
   description = "boolean true value"

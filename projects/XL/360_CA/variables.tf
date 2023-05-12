@@ -3,22 +3,19 @@ variable "aws_region" {
   description = "aws region"
   default     = "ap-southeast-3"
 }
-
-variable "aws_shared_config_files" {
-  type        = list(any)
-  description = "aws config files"
-  default     = []
-}
-
-variable "aws_shared_credentials_files" {
-  type        = list(any)
-  description = "aws credential files"
-  default     = []
-}
-
-variable "aws_profile" {
+variable "access_key" {
   type        = string
-  description = "aws profile"
+  description = "value"
+  default     = ""
+}
+variable "secret_key" {
+  type        = string
+  description = "value"
+  default     = ""
+}
+variable "token" {
+  type        = string
+  description = "value"
   default     = ""
 }
 
@@ -40,12 +37,6 @@ variable "tableau_instance_type" {
   default     = "t3.micro"
 }
 
-variable "tableau_user_data" {
-  type        = string
-  description = "user data"
-  default     = ""
-}
-
 variable "collibra_instance_count" {
   type        = number
   description = "number of instances"
@@ -56,6 +47,42 @@ variable "collibra_instance_type" {
   type        = string
   description = "type of instances"
   default     = "t3.micro"
+}
+
+variable "ebs_volume_count" {
+  type        = number
+  description = "number of ebs volume"
+  default     = 1
+}
+
+variable "ebs2_device_name" {
+  type        = string
+  description = "disk name value"
+  default     = "/dev/xvdb"
+}
+
+variable "ebs2_volume_size" {
+  type        = number
+  description = "disk volume size value"
+  default     = 20
+}
+
+variable "ebs2_volume_type" {
+  type        = string
+  description = "disk volume type value"
+  default     = "gp3"
+}
+
+variable "ebs2_is_encrypted" {
+  type        = bool
+  description = "disk encrypted boolean value"
+  default     = false
+}
+
+variable "ebs2_is_delete_on_termination" {
+  type        = bool
+  description = "delete on terminataion boolean value"
+  default     = false
 }
 
 variable "key_name" {
@@ -118,35 +145,99 @@ variable "root_is_delete_on_termination" {
   default     = true
 }
 
-variable "ebs1_device_name" {
+variable "tableau_ebs1_device_name" {
   type        = string
   description = "disk name value"
   default     = "/dev/xvda"
 }
 
-variable "ebs1_volume_size" {
+variable "tableau_ebs1_volume_size" {
   type        = number
   description = "disk volume size value"
   default     = 20
 }
 
-variable "ebs1_volume_type" {
+variable "tableau_ebs1_volume_type" {
   type        = string
   description = "disk volume type value"
   default     = "gp3"
 }
 
-variable "ebs1_is_encrypted" {
+variable "tableau_ebs1_is_encrypted" {
   type        = bool
   description = "disk encrypted boolean value"
   default     = false
 }
 
-variable "ebs1_is_delete_on_termination" {
+variable "tableau_ebs1_is_delete_on_termination" {
   type        = bool
   description = "delete on terminataion boolean value"
   default     = false
 }
+
+
+variable "collibra_ebs1_device_name" {
+  type        = string
+  description = "disk name value"
+  default     = "/dev/xvda"
+}
+
+variable "collibra_ebs1_volume_size" {
+  type        = number
+  description = "disk volume size value"
+  default     = 20
+}
+
+variable "collibra_ebs1_volume_type" {
+  type        = string
+  description = "disk volume type value"
+  default     = "gp3"
+}
+
+variable "collibra_ebs1_is_encrypted" {
+  type        = bool
+  description = "disk encrypted boolean value"
+  default     = false
+}
+
+variable "collibra_ebs1_is_delete_on_termination" {
+  type        = bool
+  description = "delete on terminataion boolean value"
+  default     = false
+}
+
+
+variable "collibra_ebs2_device_name" {
+  type        = string
+  description = "disk name value"
+  default     = "/dev/xvda"
+}
+
+variable "collibra_ebs2_volume_size" {
+  type        = number
+  description = "disk volume size value"
+  default     = 20
+}
+
+variable "collibra_ebs2_volume_type" {
+  type        = string
+  description = "disk volume type value"
+  default     = "gp3"
+}
+
+variable "collibra_ebs2_is_encrypted" {
+  type        = bool
+  description = "disk encrypted boolean value"
+  default     = false
+}
+
+variable "collibra_ebs2_is_delete_on_termination" {
+  type        = bool
+  description = "delete on terminataion boolean value"
+  default     = false
+}
+
+
 
 variable "is_associate_public_ip_address" {
   type        = bool

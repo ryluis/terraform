@@ -1,6 +1,11 @@
 locals {
   generated_str = random_string.rand_str.result
 
+  access_key = var.access_key
+  secret_key = var.secret_key
+  token      = var.token
+
+
   ## vpc variable declaration
   vpc_id = var.vpc_id
 
@@ -11,17 +16,21 @@ locals {
   private_subnets_info = { for k, v in data.aws_subnet.list_of_private_subnet : v.cidr_block => k }
 
 
-
-
-
   ## aws instance variable declaration
   tableau_instance_count         = var.tableau_instance_count
   tableau_instance_type          = var.tableau_instance_type
   tableau_image_id               = data.aws_ami.ubuntu-20_04.id
-  is_associate_public_ip_address = var.is_associate_public_ip_address
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
+  is_associate_public_ip_address = var.is_associate_public_ip_address
 
-  list_of_existing_tableau_instance = data.aws_instances.existing_tableau_instances
+  collibra_instance_count     = var.collibra_instance_count
+  collibra_instance_type      = var.collibra_instance_type
+  collibra_image_id           = data.aws_ami.rhel-8.id
+  collibra_instance_user_data = data.template_file.collibra_init.rendered
+
+
+  ## retrieve existing tableau instance for modification
+  list_of_existing_tableau_instance_id = data.aws_instances.existing_tableau_instances.ids
 
   bastion_image_id = data.aws_ami.ubuntu-20_04.id
 
@@ -38,13 +47,23 @@ locals {
   root_is_encrypted             = var.root_is_encrypted
   root_is_delete_on_termination = var.root_is_delete_on_termination
 
-  ebs1_device_name              = var.ebs1_device_name
-  ebs1_volume_size              = var.ebs1_volume_size
-  ebs1_volume_type              = var.ebs1_volume_type
-  ebs1_is_encrypted             = var.ebs1_is_encrypted
-  ebs1_is_delete_on_termination = var.ebs1_is_delete_on_termination
+  tableau_ebs1_device_name              = var.tableau_ebs1_device_name
+  tableau_ebs1_volume_size              = var.tableau_ebs1_volume_size
+  tableau_ebs1_volume_type              = var.tableau_ebs1_volume_type
+  tableau_ebs1_is_encrypted             = var.tableau_ebs1_is_encrypted
+  tableau_ebs1_is_delete_on_termination = var.tableau_ebs1_is_delete_on_termination
 
+  collibra_ebs1_device_name              = var.collibra_ebs1_device_name
+  collibra_ebs1_volume_size              = var.collibra_ebs1_volume_size
+  collibra_ebs1_volume_type              = var.collibra_ebs1_volume_type
+  collibra_ebs1_is_encrypted             = var.collibra_ebs1_is_encrypted
+  collibra_ebs1_is_delete_on_termination = var.collibra_ebs1_is_delete_on_termination
 
+  collibra_ebs2_device_name              = var.collibra_ebs2_device_name
+  collibra_ebs2_volume_size              = var.collibra_ebs2_volume_size
+  collibra_ebs2_volume_type              = var.collibra_ebs2_volume_type
+  collibra_ebs2_is_encrypted             = var.collibra_ebs2_is_encrypted
+  collibra_ebs2_is_delete_on_termination = var.collibra_ebs2_is_delete_on_termination
 
   ## security group module variable declaration
   sg_module_ssh = var.sg_module_ssh
