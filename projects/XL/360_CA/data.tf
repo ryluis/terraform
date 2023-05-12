@@ -22,8 +22,9 @@ data "aws_ami" "rhel-8" {
   owners      = ["amazon"]
 
   filter {
-    name   = "name"
-    values = ["RHEL-8.1*HVM-*Hourly*"]
+    name = "name"
+    # values = ["RHEL-8.1*HVM-*Hourly*"]
+    values = ["RHEL-8.2*HVM-*Hourly*"]
   }
 
   filter {
