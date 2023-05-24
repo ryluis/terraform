@@ -11,95 +11,10 @@ resource "random_string" "rand_str" {
   special = false
 }
 
-module "sg_01" {
-  depends_on = [
-    data.aws_subnet.list_of_private_subnet,
-    data.aws_subnet.list_of_public_subnet
-  ]
-
-  # source  = "terraform-aws-modules/security-group/aws//modules/ssh"
-  source = "terraform-aws-modules/security-group/aws"
-
-  name        = format("%s-%s-%s-sg_01", local.environment, local.project_name, local.generated_str)
-  description = "Security group for allowing ssh access from private subnet"
-  vpc_id      = local.vpc_id
-
-  ingress_cidr_blocks = sort(concat(local.public_subnets_cidr, local.private_subnets_cidr))
-
-
-  ## using predefined rule declaration
-  ingress_rules = [
-    local.sg_module_ssh
-  ]
-
-  ingress_with_self = [{
-    rule = "all-all"
-  }]
-
-  # egress_rules       = ["all-all"]
-  # egress_cidr_blocks = ["0.0.0.0/0"]
-
-  egress_with_cidr_blocks = [
-    {
-      from_port  = 0
-      to_port    = 65535
-      protocol   = "ALL"
-      cidr_block = "0.0.0.0/0"
-    }
-  ]
-
-  tags = {
-    Name          = format("%s-%s-%s-sg_01", local.environment, local.project_name, local.generated_str),
-    created_by    = local.created_by,
-    generated_via = local.generated_via,
-    environment   = local.environment,
-    project_name  = local.project_name
-  }
-}
-
-module "sg_02" {
-  source = "terraform-aws-modules/security-group/aws"
-
-  name        = format("%s-%s-%s-sg_02", local.environment, local.project_name, local.generated_str)
-  description = "Security group for allowing ssh access from internet"
-  vpc_id      = local.vpc_id
-
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-
-  ## using predefined rule declaration
-  ingress_rules = [
-    local.sg_module_ssh
-  ]
-
-  ingress_with_self = [{
-    rule = "all-all"
-  }]
-
-  # egress_rules       = ["all-all"]
-  # egress_cidr_blocks = ["0.0.0.0/0"]
-
-  egress_with_cidr_blocks = [
-    {
-      from_port  = 0
-      to_port    = 65535
-      protocol   = "ALL"
-      cidr_block = "0.0.0.0/0"
-    }
-  ]
-
-  tags = {
-    Name          = format("%s-%s-%s-sg_02", local.environment, local.project_name, local.generated_str),
-    created_by    = local.created_by,
-    generated_via = local.generated_via,
-    environment   = local.environment,
-    project_name  = local.project_name
-  }
-}
-
 module "ec2_tableau" {
   depends_on = [
     data.aws_subnet.list_of_private_subnet,
-    module.sg_01,
+    module.sg_tableau,
     # aws_key_pair.xl_360_CA_keypair
   ]
 
@@ -111,9 +26,9 @@ module "ec2_tableau" {
   instance_type     = local.tableau_instance_type
   instance_image_id = local.tableau_image_id
 
-  # instance_subnet_ids       = values(local.private_subnets_info)
-  instance_subnet_ids         = [values(local.private_subnets_info)[0]]
-  instance_security_group_ids = [module.sg_01.security_group_id]
+  instance_subnet_ids = values(local.private_subnets_info)
+  # instance_subnet_ids         = [values(local.private_subnets_info)[0]]
+  instance_security_group_ids = [module.sg_tableau.security_group_id]
 
   is_associate_public_ip_address = !local.is_associate_public_ip_address
 
@@ -148,7 +63,7 @@ module "ec2_tableau" {
 module "ec2_collibra" {
   depends_on = [
     data.aws_subnet.list_of_private_subnet,
-    module.sg_01,
+    module.sg_collibra,
     # aws_key_pair.xl_360_CA_keypair
   ]
 
@@ -162,7 +77,7 @@ module "ec2_collibra" {
 
   # instance_subnet_ids       = values(local.private_subnets_info)
   instance_subnet_ids         = [values(local.private_subnets_info)[0]]
-  instance_security_group_ids = [module.sg_01.security_group_id]
+  instance_security_group_ids = [module.sg_collibra.security_group_id]
 
   is_associate_public_ip_address = !local.is_associate_public_ip_address
 
@@ -199,15 +114,4 @@ module "ec2_collibra" {
     project_name  = local.project_name
     map-migrated  = local.map-migrated
   }
-}
-
-
-## run below resource to controll the state of ec2 instance
-resource "aws_ec2_instance_state" "instance_state_controller" {
-  count = length(local.list_of_existing_tableau_instance_id)
-
-  instance_id = local.list_of_existing_tableau_instance_id[count.index]
-
-  state = "stopped"
-  # state = "running"
 }

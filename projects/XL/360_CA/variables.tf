@@ -251,6 +251,18 @@ variable "sg_module_ssh" {
   default     = "ssh-tcp"
 }
 
+variable "sg_module_http" {
+  type        = string
+  description = "http security group module"
+  default     = "http-80-tcp"
+}
+
+variable "sg_module_https" {
+  type        = string
+  description = "https security group module"
+  default     = "https-443-tcp"
+}
+
 ## variables for tagging
 variable "created_by" {
   type    = string

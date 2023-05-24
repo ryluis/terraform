@@ -16,7 +16,7 @@
 #   value = local.private_subnets_info
 # }
 
-output "test" {
-  value = data.aws_key_pair.existing_key_pair
-}
+# output "test" {
+#   value = data.aws_key_pair.existing_key_pair
+# }
 

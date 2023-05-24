@@ -7,7 +7,9 @@ locals {
 
 
   ## vpc variable declaration
-  vpc_id = var.vpc_id
+  vpc_id   = var.vpc_id
+  vpc_cidr = data.aws_vpc.active_vpc.cidr_block
+
 
   public_subnets_cidr  = sort([for subnet in data.aws_subnet.list_of_public_subnet : subnet.cidr_block])
   private_subnets_cidr = sort([for subnet in data.aws_subnet.list_of_private_subnet : subnet.cidr_block])
@@ -17,7 +19,8 @@ locals {
 
 
   ## aws instance variable declaration
-  tableau_instance_count         = var.tableau_instance_count
+  # tableau_instance_count = var.tableau_instance_count
+  tableau_instance_count         = length(data.aws_subnet.list_of_private_subnet)
   tableau_instance_type          = var.tableau_instance_type
   tableau_image_id               = data.aws_ami.ubuntu-20_04.id
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
@@ -66,7 +69,9 @@ locals {
   collibra_ebs2_is_delete_on_termination = var.collibra_ebs2_is_delete_on_termination
 
   ## security group module variable declaration
-  sg_module_ssh = var.sg_module_ssh
+  sg_module_ssh   = var.sg_module_ssh
+  sg_module_http  = var.sg_module_http
+  sg_module_https = var.sg_module_https
 
   ## tagging variable declaration
   created_by    = var.created_by

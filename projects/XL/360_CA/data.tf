@@ -54,10 +54,14 @@ data "aws_key_pair" "existing_key_pair" {
   include_public_key = true
 }
 
+data "aws_vpc" "active_vpc" {
+  id = local.vpc_id
+}
+
 data "aws_subnets" "public_subnet" {
   filter {
     name   = "vpc-id"
-    values = [local.vpc_id]
+    values = [data.aws_vpc.active_vpc.id]
   }
 
   filter {
@@ -69,7 +73,7 @@ data "aws_subnets" "public_subnet" {
 data "aws_subnets" "private_subnet" {
   filter {
     name   = "vpc-id"
-    values = [local.vpc_id]
+    values = [data.aws_vpc.active_vpc.id]
   }
 
   filter {
