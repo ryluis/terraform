@@ -1,11 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-
-  access_key = var.access_key
-  secret_key = var.secret_key
-  token      = var.token
-}
-
 resource "random_string" "rand_str" {
   length  = 7
   special = false

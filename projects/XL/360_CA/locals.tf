@@ -19,8 +19,8 @@ locals {
 
 
   ## aws instance variable declaration
-  # tableau_instance_count = var.tableau_instance_count
-  tableau_instance_count         = length(data.aws_subnet.list_of_private_subnet)
+  tableau_instance_count = var.tableau_instance_count
+  # tableau_instance_count         = length(data.aws_subnet.list_of_private_subnet)
   tableau_instance_type          = var.tableau_instance_type
   tableau_image_id               = data.aws_ami.ubuntu-20_04.id
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
@@ -34,6 +34,9 @@ locals {
 
   ## retrieve existing tableau instance for modification
   list_of_existing_tableau_instance_id = data.aws_instances.existing_tableau_instances.ids
+
+  ## retrieve existing collibra instance for modification
+  list_of_existing_collibra_instance_id = data.aws_instances.existing_collibra_instances.ids
 
   bastion_image_id = data.aws_ami.ubuntu-20_04.id
 

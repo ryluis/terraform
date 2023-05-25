@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo yum install -y container-selinux selinux-policy-base
+sudo yum install -y vim bash-completion container-selinux selinux-policy-base
 sudo yum install -y https://rpm.rancher.io/k3s/stable/common/centos/7/noarch/k3s-selinux-0.2-1.el7_8.noarch.rpm
 
 ## configure 1st partition for /storage
@@ -14,3 +14,15 @@ sudo bash -c "mkdir -p /var/lib/kubelet"
 sudo bash -c "mkfs.xfs /dev/nvme2n1"
 sudo bash -c "mount /dev/nvme2n1 /var/lib/rancher/k3s"
 sudo bash -c "echo '/dev/nvme2n1 /var/lib/rancher/k3s xfs defaults 0 0' >> /etc/fstab"
+
+
+## create user 
+sudo bash -c "useradd -m -s /bin/bash collibra"
+
+## modify sudoers
+sudo bash -c "echo 'collibra ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/custom"
+
+## modify timezone
+sudo bash -c "timedatectl set-timezone Asia/Jakarta"
+
+

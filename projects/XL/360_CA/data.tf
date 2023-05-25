@@ -102,3 +102,14 @@ data "aws_instances" "existing_tableau_instances" {
   instance_state_names = ["running", "stopped"]
 
 }
+
+data "aws_instances" "existing_collibra_instances" {
+
+  filter {
+    name   = "tag:Name"
+    values = ["*Collibra*"]
+  }
+
+  instance_state_names = ["running", "stopped"]
+
+}
