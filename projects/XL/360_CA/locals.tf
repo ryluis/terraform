@@ -19,8 +19,8 @@ locals {
 
 
   ## aws instance variable declaration
-  tableau_instance_count = var.tableau_instance_count
-  # tableau_instance_count         = length(data.aws_subnet.list_of_private_subnet)
+  # tableau_instance_count = var.tableau_instance_count
+  tableau_instance_count         = length(data.aws_subnet.list_of_private_subnet)
   tableau_instance_type          = var.tableau_instance_type
   tableau_image_id               = data.aws_ami.ubuntu-20_04.id
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
