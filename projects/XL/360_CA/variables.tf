@@ -43,7 +43,12 @@ variable "collibra_instance_count" {
   default     = 1
 }
 
-variable "collibra_instance_type" {
+variable "collibra_dic_instance_type" {
+  type        = string
+  description = "type of instances"
+  default     = "t3.micro"
+}
+variable "collibra_dq_instance_type" {
   type        = string
   description = "type of instances"
   default     = "t3.micro"
@@ -262,6 +267,20 @@ variable "sg_module_https" {
   description = "https security group module"
   default     = "https-443-tcp"
 }
+
+variable "sg_module_postgresql" {
+  type        = string
+  description = "postgres security group module"
+  default     = "postgresql-tcp"
+}
+
+## variable for rds 
+variable "rds_collibra_dq_username" {
+  type        = string
+  description = "postgres collibra dq username"
+  default     = "collibra"
+}
+
 
 ## variables for tagging
 variable "created_by" {

@@ -1,5 +1,7 @@
 locals {
-  generated_str = random_string.rand_str.result
+  generated_str              = random_string.rand_str.result
+  rds_password_generated_str = random_string.rds_password_str.result
+
 
   access_key = var.access_key
   secret_key = var.secret_key
@@ -26,10 +28,12 @@ locals {
   tableau_instance_user_data     = data.template_file.tableau_init.rendered
   is_associate_public_ip_address = var.is_associate_public_ip_address
 
-  collibra_instance_count     = var.collibra_instance_count
-  collibra_instance_type      = var.collibra_instance_type
-  collibra_image_id           = data.aws_ami.rhel-8.id
-  collibra_instance_user_data = data.template_file.collibra_init.rendered
+  collibra_instance_count         = var.collibra_instance_count
+  collibra_dic_instance_type      = var.collibra_dic_instance_type
+  collibra_dq_instance_type       = var.collibra_dq_instance_type
+  collibra_image_id               = data.aws_ami.rhel-8.id
+  collibra_dic_instance_user_data = data.template_file.collibra_dic_init.rendered
+  collibra_dq_instance_user_data  = data.template_file.collibra_dq_init.rendered
 
 
   ## retrieve existing tableau instance for modification
@@ -72,9 +76,10 @@ locals {
   collibra_ebs2_is_delete_on_termination = var.collibra_ebs2_is_delete_on_termination
 
   ## security group module variable declaration
-  sg_module_ssh   = var.sg_module_ssh
-  sg_module_http  = var.sg_module_http
-  sg_module_https = var.sg_module_https
+  sg_module_ssh        = var.sg_module_ssh
+  sg_module_http       = var.sg_module_http
+  sg_module_https      = var.sg_module_https
+  sg_module_postgresql = var.sg_module_postgresql
 
   ## tagging variable declaration
   created_by    = var.created_by
@@ -82,4 +87,8 @@ locals {
   environment   = var.environment
   project_name  = var.project_name
   map-migrated  = var.map-migrated
+
+  ## postgresql declaration
+  rds_collibra_dq_username = var.rds_collibra_dq_username
+
 }

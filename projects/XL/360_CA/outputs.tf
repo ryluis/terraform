@@ -20,3 +20,6 @@
 #   value = data.aws_key_pair.existing_key_pair
 # }
 
+output "rds_password_generated_str" {
+  value = local.rds_password_generated_str
+}

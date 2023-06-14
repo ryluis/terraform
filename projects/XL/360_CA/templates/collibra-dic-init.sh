@@ -20,7 +20,11 @@ sudo bash -c "echo '/dev/nvme2n1 /var/lib/rancher/k3s xfs defaults 0 0' >> /etc/
 sudo bash -c "useradd -m -s /bin/bash collibra"
 
 ## modify sudoers
-sudo bash -c "echo 'collibra ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/custom"
+sudo bash -c "echo 'collibra ALL=(ALL:ALL) ALL' > /etc/sudoers.d/custom"
+
+## modify sshd_config
+sudo bash -c "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config"
+sudo bash -c "systemctl restart sshd"
 
 ## modify timezone
 sudo bash -c "timedatectl set-timezone Asia/Jakarta"

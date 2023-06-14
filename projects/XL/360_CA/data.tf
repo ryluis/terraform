@@ -44,8 +44,13 @@ data "template_file" "tableau_init" {
 
 }
 
-data "template_file" "collibra_init" {
-  template = file("${path.module}/templates/collibra-init.sh")
+data "template_file" "collibra_dic_init" {
+  template = file("${path.module}/templates/collibra-dic-init.sh")
+
+}
+
+data "template_file" "collibra_dq_init" {
+  template = file("${path.module}/templates/collibra-dq-init.sh")
 
 }
 

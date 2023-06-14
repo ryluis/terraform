@@ -36,8 +36,9 @@ tableau_instance_type = "r5.4xlarge"
 
 
 ## Collibra
-collibra_instance_count = 1
-collibra_instance_type  = "m5.4xlarge"
+collibra_instance_count    = 1
+collibra_dic_instance_type = "m5.4xlarge"
+collibra_dq_instance_type  = "r5.4xlarge"
 
 is_associate_public_ip_address = true
 
@@ -67,6 +68,8 @@ collibra_ebs2_is_encrypted             = false
 collibra_ebs2_is_delete_on_termination = false
 
 
+## rds configuration
+rds_collibra_dq_username = "collibra"
 
 ## key pair configuration
 keypair_dir   = "keypairs"
@@ -76,9 +79,10 @@ key_algorithm = "RSA"
 key_bit_size  = 4096
 
 ## security group module
-sg_module_ssh   = "ssh-tcp"
-sg_module_http  = "http-80-tcp"
-sg_module_https = "https-443-tcp"
+sg_module_ssh        = "ssh-tcp"
+sg_module_http       = "http-80-tcp"
+sg_module_https      = "https-443-tcp"
+sg_module_postgresql = "postgresql-tcp"
 
 ## tagging configuration
 created_by    = "LTI"

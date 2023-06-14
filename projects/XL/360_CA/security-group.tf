@@ -163,6 +163,65 @@ module "sg_public_access" {
   }
 }
 
+
+module "sg_rds_collibra_dq" {
+  depends_on = [
+    data.aws_subnet.list_of_private_subnet,
+    data.aws_subnet.list_of_public_subnet
+  ]
+
+  source = "terraform-aws-modules/security-group/aws"
+
+  name        = format("%s-%s-%s-sg_rds_collibra_dq", local.environment, local.project_name, local.generated_str)
+  description = "Security group for rds postgres for collibra dq"
+  vpc_id      = local.vpc_id
+
+  # ingress_cidr_blocks = sort(concat(local.public_subnets_cidr, local.private_subnets_cidr))
+  ingress_cidr_blocks = [local.vpc_cidr]
+
+
+  ## using predefined rule declaration
+  ingress_with_self = [{
+    rule = "all-all"
+  }]
+
+  ingress_rules = [
+    local.sg_module_postgresql
+  ]
+
+  # egress_rules       = ["all-all"]
+  # egress_cidr_blocks = ["0.0.0.0/0"]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port  = 0
+      to_port    = 65535
+      protocol   = "ALL"
+      cidr_block = "0.0.0.0/0"
+    }
+  ]
+
+  tags = {
+    Name          = format("%s-%s-%s-sg_rds_collibra_dq", local.environment, local.project_name, local.generated_str),
+    created_by    = local.created_by,
+    generated_via = local.generated_via,
+    environment   = local.environment,
+    project_name  = local.project_name
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 module "sg_tableau_lb" {
   depends_on = [
     data.aws_subnet.list_of_private_subnet
