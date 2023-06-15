@@ -12,9 +12,15 @@
 ## LTI
 vpc_id = ""
 
+<<<<<<< HEAD
 access_key = ""
 secret_key = ""
 token      = ""
+=======
+access_key = "ASIA5YDLWVT3FUF3UJEH"
+secret_key = "YuaMmvJQ2j8u0cGomoZhYCQ1UBamoqnCMBRA4K54"
+token      = "IQoJb3JpZ2luX2VjEMz//////////wEaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAIOjPgA8NHug6q6xOjOsDjv4qvt3VxD95zNuKi5tpPFuAiALbds6LJoL9I8mrw6qkfo0cPtsowbbIMomjR2VC3KIPCrsAgglEAAaDDk0NTExODY4NjQ1NCIM+w/+bSiAjyP8J5w1KskCtn9B5nnZbhPEZxPf0bHqAyIlB3obWr+pHQz6h60hfP2VR5TJ3lNEQVBtZLb3ARh5//l271eA2eb380vsK7L0hkY32Np6dEokKRAVYjzFZ4DpUuF/aWwNnd1LjJvSdwltvYvQT9Ex1xAFhUVNCqJlC9TgHaEzPDYsaBEEBGcJMoxoEsvtXHAyW3GyjBM+pBCXtaiahqgnfoQLSjLQtC6xnJm2jEEYYKQoYzpOlo7p2T4GiaHKa8KZf7rLxNgr1+uD4tIDrdOvXlGcgNtH8ctZTMJptuaPIdbOvZNb2/Lek1RmeeSFmkTD6LtqwCGGZFjAI+ED4C+rbyowEsrPaotXZgw0kqQF7HNbG7lbhga6sjR7NllkagD/LXNMtzyOGwZbaB3edZ0+L2l1RMidPA7zhgkGcZS0v+VawZk+DeaybJd8qjskvVdLNtAwrZiqpAY6pwF0jNDW16flhEp/L3ZxnYb4wHlrUE5ywRzkqQR1CV8rPkjNPeEhqpo6iw6pqzgW1Ki3iv6ka9AfJWWPfn1Th+GCVAmA06ir/jzHBx/DWB/IdkEEHSNmIIg4cAuNn1KTDzbSYob3MfmPN2rlPwbqz7ELgy2n1Q5ZPF3GvmtKct341D06WCYq3H9U0b84MtbPuCBAcn9yunFviX0GVHv544LtitPwDNhKKQ=="
+>>>>>>> e893713 (Update)
 
 
 ## XL

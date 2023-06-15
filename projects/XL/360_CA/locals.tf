@@ -1,5 +1,6 @@
 locals {
   generated_str              = random_string.rand_str.result
+  rds_instance_name_str      = random_string.rds_instance_name_str.result
   rds_password_generated_str = random_string.rds_password_str.result
 
 

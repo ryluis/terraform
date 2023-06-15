@@ -1,13 +1,3 @@
-resource "random_string" "rand_str" {
-  length  = 7
-  special = false
-}
-
-resource "random_string" "rds_password_str" {
-  length  = 10
-  special = true
-}
-
 module "ec2_tableau" {
   depends_on = [
     data.aws_subnet.list_of_private_subnet,

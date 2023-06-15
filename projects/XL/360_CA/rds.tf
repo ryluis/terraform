@@ -29,17 +29,29 @@ resource "aws_db_instance" "collibra_dq_rds_instance" {
     module.sg_rds_collibra_dq
   ]
 
-  identifier             = "collibra-dq-rds-instance"
-  instance_class         = "db.m5.xlarge"
-  allocated_storage      = 100
-  max_allocated_storage  = 1000
-  engine                 = "postgres"
-  engine_version         = "14.1"
-  username               = "edu"
-  password               = local.rds_password_generated_str
-  db_subnet_group_name   = aws_db_subnet_group.collibra_dq_subnet_group.name
-  vpc_security_group_ids = [module.sg_rds_collibra_dq.security_group_id]
-  parameter_group_name   = aws_db_parameter_group.collibra_dq_db_parameter_group.name
-  publicly_accessible    = false
-  skip_final_snapshot    = false
+  identifier                  = format("%s-%s-collibra-dq-%s-rds", local.project_name, local.environment, local.rds_instance_name_str)
+  instance_class              = "db.m5.xlarge"
+  allocated_storage           = 100
+  max_allocated_storage       = 1000
+  engine                      = "postgres"
+  engine_version              = "14.7"
+  username                    = "xl_dba"
+  manage_master_user_password = true
+  # password                  = local.rds_password_generated_str
+  db_name                   = "collibra_dq"
+  db_subnet_group_name      = aws_db_subnet_group.collibra_dq_subnet_group.name
+  vpc_security_group_ids    = [module.sg_rds_collibra_dq.security_group_id]
+  parameter_group_name      = aws_db_parameter_group.collibra_dq_db_parameter_group.name
+  publicly_accessible       = false
+  skip_final_snapshot       = false
+  final_snapshot_identifier = format("%s-%s-collibra-dq-%s-rds-snapshot", local.project_name, local.environment, local.rds_instance_name_str)
+
+  tags = {
+    Name          = format("%s-%s-collibra-dq-%s-rds", local.project_name, local.environment, local.rds_instance_name_str),
+    created_by    = local.created_by,
+    generated_via = local.generated_via,
+    environment   = local.environment,
+    project_name  = local.project_name
+    map-migrated  = local.map-migrated
+  }
 }
