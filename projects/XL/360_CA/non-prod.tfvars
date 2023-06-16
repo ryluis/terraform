@@ -10,20 +10,20 @@
 ## VPC configuration
 
 ## LTI
-vpc_id = ""
-
-access_key = ""
-secret_key = ""
-token      = ""
-
-
-## XL
-## NonProd
-# vpc_id = "vpc-09a25a3c8b6353b7b"
+# vpc_id = ""
 
 # access_key = ""
 # secret_key = ""
 # token      = ""
+
+
+## XL
+## NonProd
+vpc_id = "vpc-09a25a3c8b6353b7b"
+
+access_key = ""
+secret_key = ""
+token      = ""
 
 
 
