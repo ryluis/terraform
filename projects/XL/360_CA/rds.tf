@@ -53,5 +53,6 @@ resource "aws_db_instance" "collibra_dq_rds_instance" {
     environment   = local.environment,
     project_name  = local.project_name
     map-migrated  = local.map-migrated
+
   }
 }
